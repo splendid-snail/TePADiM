@@ -1,5 +1,4 @@
 """The mighty TePADiM -- extremely a work in progress.
-
 To do:
 Tweak line generation function so the user can set some of the
 variables!
@@ -18,6 +17,8 @@ pause_wait_time = 0.05
 
 possible_lines = []
 
+done = False
+
 def printer(text, wait_time):
 	for char in range(len(text)):
 		print(text[char], end = "")
@@ -30,6 +31,7 @@ def display_lists():
 	print("The following lists are available:")
 	print(os.listdir(list_path))
 	print()
+	return False
 
 def create_list():
 	#print local text files
@@ -90,7 +92,6 @@ def create_list():
 	print()
 	print("List saved.")
 	print()
-	print_menu()
 
 def read_lines():
 	lines = []
@@ -118,14 +119,13 @@ def divine():
 	global possible_lines
 	possible_lines = read_lines()
 	print()
-	mini = int(input("Enter minimum paragraph length in characters (TePADiM likes 20):"))
-	maxi = int(input("Enter the maximum paragraph length in chacters (TePADiM likes 500):"))
+	mini = int(input("Enter minimum paragraph length in characters (TePADiM likes 20): "))
+	maxi = int(input("Enter the maximum paragraph length in chacters (TePADiM likes 500): "))
 	while True:
 		print()
 		user_input = input("Press return to generate or type Q to quit: ")
 		if user_input.lower() == "q":
 			print()
-			print_menu()
 			return False
 		else:
 		    paragraph_to_print = paragraph_maker(mini,maxi)
@@ -191,7 +191,6 @@ def candle():
 		printer("  ::::::::::::::::.........::::::::::::::::::::::::", print_wait_time)
 		printer("", print_wait_time)
 		printer("", print_wait_time)
-	print_menu()
 
 def print_title():
 
@@ -234,51 +233,46 @@ def print_menu():
 	print()
 
 def menu_input():
+	global done
 	printer("Choose an option:", print_wait_time)
 	print()
 	user_input = input()
 	if user_input == "1":
 	    print()
 	    create_list()
-	    return True
 	elif user_input == "2":
 		display_lists()
-		print_menu()
-		return True
 	elif user_input == "3":
 	    print()
 	    print("No merging yet!")
 	    print()
-	    return True
 	elif user_input == "4":
 		display_lists()
 		divine()
-		return True
 	elif user_input == "5":
 		print()
 		printer("TePADiM is an oracular method.", print_wait_time)
 		printer("It loves to crash if you give it incorrect filenames.", print_wait_time)
 		printer("It is free.", print_wait_time)
 		print()
-		return True
 	elif user_input == "6":
 	    candle()
-	    return True
 	elif user_input == "7":
-	    print()
-	    print("Bye!")
-	    time.sleep(3)
-	    return False
+		print()
+		print("Bye!")
+		time.sleep(3)
+		done = True
 	else:
 		print()
 		print("Enter a real option!")
 		print()
-		return True
 
 def main():
-    print_title()
-    print_menu()
-    while menu_input():
-        menu_input()
+	global done
+
+	print_title()
+	while not done:
+		print_menu()
+		menu_input()
 
 main()
