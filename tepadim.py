@@ -5,6 +5,8 @@ variables!
 
 Exception handling. We should probably start doing that now...
 
+Q to Quit when creating new list instead of choosing source file
+
 More candles!
 """
 
@@ -12,12 +14,14 @@ import time
 from random import randrange
 import os
 
+
+done = False
+
 print_wait_time = 0.05 / 4
 pause_wait_time = 0.05
 
 possible_lines = []
 
-done = False
 
 def printer(text, wait_time):
 	for char in range(len(text)):
@@ -26,10 +30,12 @@ def printer(text, wait_time):
 	print()
 
 def display_lists():
-	list_path =  os.path.join(os.path.dirname(__file__), "lists\\")
+	list_path = os.path.join(os.path.dirname(__file__), "lists\\")
 	print()
 	print("The following lists are available:")
-	print(os.listdir(list_path))
+	for file in os.listdir(list_path):
+		if file.endswith(".txt"):
+			print(file)
 	print()
 	return False
 
@@ -47,7 +53,6 @@ def create_list():
 	mani_read = mani_first.read()
 	mani_length = len(mani_read)
 	mani_first.close()
-
 
 	#Open it again to read it bit by bit to a list, each with a 'new line' char added
 	manifesto = open(source_file, "r", encoding = "utf-8")
@@ -94,6 +99,21 @@ def create_list():
 	print()
 
 def read_lines():
+	done = False
+	lines = read_line_input()
+
+	while done == False:
+		print()
+		print("List added. Enter Y to add another, or anything else to continue:")
+		user_input = input()
+		if user_input.lower() == "y":
+			lines = lines + read_line_input()
+		else:
+			done = True
+
+	return lines
+
+def read_line_input():
 	lines = []
 	print("Enter the filename of the source list (including .txt):")
 	user_input = input()
@@ -220,15 +240,13 @@ def print_menu():
 	time.sleep(pause_wait_time)
 	print("2: See available lists")
 	time.sleep(pause_wait_time)
-	print("3: Merge existing lists")
+	print("3: Divine")
 	time.sleep(pause_wait_time)
-	print("4: Divine")
+	print("4: About TePADiM")
 	time.sleep(pause_wait_time)
-	print("5: About TePADiM")
+	print("5: Light a candle")
 	time.sleep(pause_wait_time)
-	print("6: Light a candle")
-	time.sleep(pause_wait_time)
-	print("7: Quit")
+	print("6: Quit")
 	time.sleep(pause_wait_time)
 	print()
 
@@ -243,21 +261,16 @@ def menu_input():
 	elif user_input == "2":
 		display_lists()
 	elif user_input == "3":
-	    print()
-	    print("No merging yet!")
-	    print()
-	elif user_input == "4":
 		display_lists()
 		divine()
-	elif user_input == "5":
+	elif user_input == "4":
 		print()
 		printer("TePADiM is an oracular method.", print_wait_time)
 		printer("It loves to crash if you give it incorrect filenames.", print_wait_time)
-		printer("It is free.", print_wait_time)
 		print()
-	elif user_input == "6":
+	elif user_input == "5":
 	    candle()
-	elif user_input == "7":
+	elif user_input == "6":
 		print()
 		print("Bye!")
 		time.sleep(3)
@@ -269,7 +282,6 @@ def menu_input():
 
 def main():
 	global done
-
 	print_title()
 	while not done:
 		print_menu()
